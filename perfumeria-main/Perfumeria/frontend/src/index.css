@@ -1,0 +1,47 @@
+/* 1. IMPORTS (OBLIGATORIO AL PRINCIPIO) */
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Zetta:wght@100..900&display=swap');
+
+/* 2. VARIABLES Y RESET */
+:root {
+  font-family: 'Lexend Zetta', sans-serif;
+}
+
+@layer base {
+  body {
+    font-family: 'Lexend Zetta', sans-serif;
+    @apply bg-black text-white;
+    margin: 0;
+  }
+}
+
+/* 3. ANIMACIONES (CARRUSEL) */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  display: flex;
+  width: max-content;
+  animation: scroll 30s linear infinite;
+}
+
+@media (max-width: 768px) {
+  .snap-x {
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .snap-center {
+    scroll-snap-align: center;
+  }
+}
+
+/* 4. TODO TU CSS RESTANTE (Aquí pegas las 900+ líneas) */

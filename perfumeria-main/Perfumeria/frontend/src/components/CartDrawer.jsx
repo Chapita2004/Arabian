@@ -2,36 +2,35 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Trash2, CreditCard } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
+import { config } from '../api/config';
+import PaymentService from '../api/payment.service';
 
 const CartDrawer = () => {
   const { cart, isCartOpen, setIsCartOpen, removeFromCart, cartTotal } = useCart();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleMercadoPago = async () => {
+  const [preferenceId, setPreferenceId] = useState(null);
+
+  // Initialize Mercado Pago
+  initMercadoPago(config.MERCADOPAGO_PUBLIC_KEY, { locale: 'es-AR' });
+
+  const handleCreatePreference = async () => {
     setIsLoading(true);
     try {
-      // 1. Llamada a tu NUEVO backend en el puerto 4000
-      const response = await fetch('http://localhost:4000/pagar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: cart.map(item => ({
-            title: item.name,
-            quantity: Number(item.quantity),
-            unit_price: typeof item.price === 'string' 
-              ? parseFloat(item.price.replace(/[^0-9.-]+/g,"")) 
-              : item.price 
-          }))
-        }),
-      });
+      const items = cart.map(item => ({
+        id: item.id,
+        title: item.name,
+        quantity: Number(item.quantity),
+        price: typeof item.price === 'string'
+          ? parseFloat(item.price.replace(/[^0-9.-]+/g, ""))
+          : item.price
+      }));
 
-      if (!response.ok) throw new Error("Error en el servidor");
+      const data = await PaymentService.createPreference(items);
 
-      const data = await response.json();
-
-      // 2. Redirección inmediata usando el ID generado por el back
       if (data.id) {
-        window.location.href = `https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=${data.id}`;
+        setPreferenceId(data.id);
       } else {
         alert("No se pudo generar el pago");
       }
@@ -53,13 +52,13 @@ const CartDrawer = () => {
     <AnimatePresence>
       {isCartOpen && (
         <>
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             onClick={() => setIsCartOpen(false)}
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200]"
           />
-          
-          <motion.div 
+
+          <motion.div
             initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
             className="fixed right-0 top-0 h-full w-full max-w-md bg-[#0a0a0a] border-l border-[#c2a35d]/30 z-[201] p-8 flex flex-col shadow-2xl"
           >
@@ -93,16 +92,20 @@ const CartDrawer = () => {
                 </div>
 
                 {/* BOTÓN ÚNICO DE PAGO */}
-                <button 
-                  onClick={handleMercadoPago}
-                  disabled={isLoading}
-                  className="w-full bg-white text-black font-black py-4 uppercase text-[10px] tracking-[0.2em] hover:bg-[#c2a35d] hover:text-white transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-                >
-                  <CreditCard size={14} />
-                  {isLoading ? 'Conectando...' : 'Pagar con Tarjeta'}
-                </button>
+                {preferenceId ? (
+                  <Wallet initialization={{ preferenceId: preferenceId }} customization={{ texts: { valueProp: 'smart_option' } }} />
+                ) : (
+                  <button
+                    onClick={handleCreatePreference}
+                    disabled={isLoading}
+                    className="w-full bg-white text-black font-black py-4 uppercase text-[10px] tracking-[0.2em] hover:bg-[#c2a35d] hover:text-white transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    <CreditCard size={14} />
+                    {isLoading ? 'Procesando...' : 'Ir a Pagar'}
+                  </button>
+                )}
 
-                <button 
+                <button
                   onClick={handleWhatsApp}
                   className="w-full border border-[#c2a35d]/50 text-[#c2a35d] font-bold py-3 uppercase text-[9px] tracking-[0.2em] hover:bg-[#c2a35d]/10 transition-colors"
                 >

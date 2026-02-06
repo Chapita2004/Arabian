@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/authContext';
+import { motion } from 'framer-motion';
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [formData, setFormData] = useState({ username: '', email: '', password: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth(); // Use context
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,15 +32,10 @@ const AuthPage = () => {
 
       if (isLogin) {
         // --- LOGIN EXITOSO ---
+        // Guardamos el token PRIMERO para que el carrito pueda cargarse
         localStorage.setItem('token', data.token);
-        // Guardamos el objeto usuario que contiene el username
-        localStorage.setItem('user', JSON.stringify(data.user));
-
-        // LANZAMOS LOS EVENTOS: 
-        // 1. 'storage' para otras pestañas
-        // 2. 'authChange' para que el Navbar actual se entere YA MISMO
-        window.dispatchEvent(new Event('storage'));
-        window.dispatchEvent(new Event('authChange'));
+        // Luego actualizamos el estado del usuario (esto dispara authChange)
+        login(data.user);
 
         navigate('/'); // Volvemos al inicio
       } else {
@@ -70,7 +67,7 @@ const AuthPage = () => {
                 type="text"
                 className="w-full bg-transparent border-b border-white/10 text-white focus:border-[#c2a35d] outline-none py-2 transition-all placeholder:text-gray-800"
                 placeholder="Ej: Juan Perez"
-                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 required={!isLogin}
               />
             </div>

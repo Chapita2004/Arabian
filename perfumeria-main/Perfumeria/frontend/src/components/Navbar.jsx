@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ShoppingBag, Menu, X, User, LogOut } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/authContext';
 
 // IMPORTACIÓN DEL LOGO
 // Asumiendo que Navbar.jsx está en src/components y la imagen en public
@@ -9,35 +10,15 @@ import logoArabian from '../../public/logo-arabian.png';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [userName, setUserName] = useState(null);
   const { setIsCartOpen, cartCount } = useCart();
+  const { user, logout } = useAuth(); // Consumir del contexto
   const navigate = useNavigate();
 
-  const checkUser = () => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      const userData = JSON.parse(storedUser);
-      setUserName(userData.username);
-    } else {
-      setUserName(null);
-    }
-  };
-
-  useEffect(() => {
-    checkUser();
-    window.addEventListener('storage', checkUser);
-    window.addEventListener('authChange', checkUser);
-    return () => {
-      window.removeEventListener('storage', checkUser);
-      window.removeEventListener('authChange', checkUser);
-    };
-  }, []);
+  // Debug log solicitado por usuario
+  console.log('Usuario en Navbar:', user);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setUserName(null);
-    window.dispatchEvent(new Event('authChange'));
+    logout();
     navigate('/');
   };
 
@@ -59,10 +40,10 @@ const Navbar = () => {
         </Link>
 
         <div className="flex items-center space-x-6">
-          {userName ? (
+          {user ? (
             <div className="flex items-center gap-3">
               <span className="text-[#c2a35d] text-[10px] font-bold tracking-widest uppercase border border-[#c2a35d]/30 px-3 py-1 italic">
-                Hola, {userName}
+                Hola, {user.name}
               </span>
               <button onClick={handleLogout} className="text-white/40 hover:text-red-500 transition-colors">
                 <LogOut size={16} />

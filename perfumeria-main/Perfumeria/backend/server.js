@@ -1,58 +1,29 @@
-// backend/server.js
-require('dotenv').config();
 const express = require('express');
-const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 const cors = require('cors');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const connectDB = require('./config/db');
+
+// Load env vars
+dotenv.config();
+
+// Connect to database
+connectDB();
 
 const app = express();
+
+// Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: process.env.FRONTEND_URL || '*', // Allow all or specific URL
+    credentials: true
+}));
 
-// Conexión a MongoDB
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('✅ MongoDB Conectado'))
-    .catch(err => console.log('❌ Error:', err));
+// Routes
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/products', require('./routes/productRoutes'));
+app.use('/api/payment', require('./routes/paymentRoutes'));
+app.use('/api/cart', require('./routes/cartRoutes'));
 
-// Modelo de Usuario
-const UserSchema = new mongoose.Schema({
-    username: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true }
-});
-const User = mongoose.model('User', UserSchema);
+const PORT = process.env.PORT || 5000;
 
-// RUTA: REGISTRO
-app.post('/api/auth/register', async (req, res) => {
-    try {
-        const { username, email, password } = req.body;
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-        const newUser = new User({ username, email, password: hashedPassword });
-        await newUser.save();
-        res.status(201).json({ message: 'Usuario creado' });
-    } catch (error) {
-        res.status(400).json({ message: 'Error al registrar' });
-    }
-});
-
-// RUTA: LOGIN
-app.post('/api/auth/login', async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const user = await User.findOne({ email });
-        if (!user) return res.status(400).json({ message: 'Usuario no encontrado' });
-
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(400).json({ message: 'Contraseña incorrecta' });
-
-        const token = jwt.sign({ id: user._id }, 'secreto_super_pro', { expiresIn: '1h' });
-        // Enviamos el username para que el frontend lo use
-        res.json({ token, user: { username: user.username } });
-    } catch (error) {
-        res.status(500).json({ message: 'Error en el servidor' });
-    }
-});
-
-app.listen(5000, () => console.log('🚀 Servidor en puerto 5000'));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

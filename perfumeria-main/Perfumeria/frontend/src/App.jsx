@@ -9,6 +9,7 @@ import videoBg from './arabian-exclusive-comprar-bien.mp4';
 import Navbar from './components/Navbar';
 import CartDrawer from './components/CartDrawer';
 import AuthPage from "./components/AuthPage";
+import Footer from "./components/Footer"; // Asegúrate de crear este archivo o usar el de abajo
 import { CartProvider, useCart } from './context/CartContext';
 
 // --- BASE DE DATOS DE PRODUCTOS ---
@@ -146,9 +147,7 @@ const ProductCard = ({ product }) => {
 
 // --- VISTAS / PÁGINAS ---
 const Home = ({ loading }) => (
-  <div className={`bg-black transition-opacity duration-1000 ${loading ? 'opacity-0' : 'opacity-100'}`}>
-    <Navbar />
-    <CartDrawer />
+  <div className={`transition-opacity duration-1000 ${loading ? 'opacity-0' : 'opacity-100'}`}>
     <header className="relative h-[85vh] flex flex-col items-center justify-center text-center px-6 overflow-hidden">
       <video className="absolute inset-0 w-full h-full object-cover z-0 grayscale-[0.3]" autoPlay loop muted playsInline>
         <source src={videoBg} type="video/mp4" />
@@ -195,10 +194,6 @@ const Home = ({ loading }) => (
         ))}
       </div>
     </main>
-
-    <footer className="py-20 border-t border-white/5 text-center bg-[#050505]">
-      <p className="text-[#c2a35d] text-xs tracking-[0.3em] uppercase opacity-50 italic px-4">Arabian Exclusive © 2026 — San Juan, Argentina</p>
-    </footer>
   </div>
 );
 
@@ -207,12 +202,10 @@ const ProductDetail = () => {
   const { addToCart } = useCart();
   const product = products.find(p => p.id === parseInt(id));
 
-  if (!product) return <div className="text-white text-center py-40">Producto no encontrado</div>;
+  if (!product) return <div className="text-white text-center py-40 font-serif tracking-widest">PRODUCTO NO ENCONTRADO</div>;
 
   return (
     <div className="bg-black min-h-screen text-white pt-32 pb-20">
-      <Navbar />
-      <CartDrawer />
       <div className="max-w-[1200px] mx-auto px-6">
         <Link to="/" className="text-[#c2a35d] text-xs uppercase tracking-[0.3em] mb-12 inline-block hover:text-white transition-colors">← Volver al catálogo</Link>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
@@ -249,8 +242,6 @@ const CategoryPage = () => {
 
   return (
     <div className="bg-black min-h-screen pt-32 pb-20">
-      <Navbar />
-      <CartDrawer />
       <div className="max-w-[1440px] mx-auto px-6">
         <div className="mb-12">
           <Link to="/" className="text-[#c2a35d] text-xs uppercase tracking-[0.3em] mb-6 inline-block hover:text-white transition-colors">← Volver al Inicio</Link>
@@ -283,12 +274,19 @@ function App() {
           {loading && <PreLoader />}
         </AnimatePresence>
 
+        {/* Componentes Globales (Se ven en todas las páginas) */}
+        <Navbar />
+        <CartDrawer />
+
         <Routes>
           <Route path="/" element={<Home loading={loading} />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/category/:categoryId" element={<CategoryPage />} />
           <Route path="/product/:id" element={<ProductDetail />} />
         </Routes>
+
+        {/* Footer Global */}
+        <Footer />
 
         {/* Botón Flotante de WhatsApp */}
         <a

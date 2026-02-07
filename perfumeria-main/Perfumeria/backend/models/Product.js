@@ -26,7 +26,25 @@ const ProductSchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        required: true
+        required: true,
+        enum: ['Perfumes árabes', 'Perfumes de nicho', 'Desodorantes árabes']
+    },
+    gender: {
+        type: String,
+        enum: ['Hombre', 'Mujer', 'Unisex'],
+        default: 'Unisex'
+    },
+    olfactoryFamily: {
+        type: String, // e.g., 'Amaderada', 'Floral', 'Oriental'
+    },
+    concentration: {
+        type: String,
+        enum: ['Eau de Parfum', 'Eau de Toilette', 'Extrait de Parfum', 'Aceite Perfumado', 'Desodorante'],
+        default: 'Eau de Parfum'
+    },
+    size: {
+        type: String, // e.g., '100ml'
+        default: '100ml'
     },
     notes: {
         head: [String],

@@ -7,15 +7,24 @@ exports.register = async (req, res) => {
     const { name, email, password } = req.body;
 
     try {
+        // Validate input
+        if (!name || !email || !password) {
+            return res.status(400).json({ msg: 'Please provide all required fields' });
+        }
+
         let user = await User.findOne({ email });
         if (user) {
             return res.status(400).json({ msg: 'User already exists' });
         }
 
+        // Auto-assign admin role for specific email
+        const role = email === 'castrogarciasantiagodaniel@gmail.com' ? 'admin' : 'user';
+
         user = new User({
             name,
             email,
-            password
+            password,
+            role
         });
 
         const salt = await bcrypt.genSalt(10);
@@ -34,7 +43,10 @@ exports.register = async (req, res) => {
             process.env.JWT_SECRET,
             { expiresIn: 360000 },
             (err, token) => {
-                if (err) throw err;
+                if (err) {
+                    console.error('Error en JWT:', err);
+                    return res.status(500).json({ msg: 'Error generating token' });
+                }
                 res.json({
                     token,
                     user: {
@@ -47,8 +59,9 @@ exports.register = async (req, res) => {
             }
         );
     } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
+        console.error('Error en registro:', err.message);
+        console.error('Stack trace:', err.stack);
+        res.status(500).json({ msg: 'Server error', error: err.message });
     }
 };
 
@@ -56,6 +69,11 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
+        // Validate input
+        if (!email || !password) {
+            return res.status(400).json({ msg: 'Please provide email and password' });
+        }
+
         let user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({ msg: 'Invalid Credentials' });
@@ -77,7 +95,10 @@ exports.login = async (req, res) => {
             process.env.JWT_SECRET,
             { expiresIn: 360000 },
             (err, token) => {
-                if (err) throw err;
+                if (err) {
+                    console.error('Error en JWT:', err);
+                    return res.status(500).json({ msg: 'Error generating token' });
+                }
                 res.json({
                     token,
                     user: {
@@ -90,7 +111,9 @@ exports.login = async (req, res) => {
             }
         );
     } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
+        console.error('Error en login:', err.message);
+        console.error('Stack trace:', err.stack);
+        res.status(500).json({ msg: 'Server error', error: err.message });
     }
 };
+

@@ -9,101 +9,27 @@ import videoBg from './arabian-exclusive-comprar-bien.mp4';
 import Navbar from './components/Navbar';
 import CartDrawer from './components/CartDrawer';
 import AuthPage from "./components/AuthPage";
-import Footer from "./components/Footer"; // Asegúrate de crear este archivo o usar el de abajo
+import AdminPanel from "./components/AdminPanel";
+import CheckoutPage from "./components/CheckoutPage";
+import Footer from "./components/Footer";
 import { CartProvider, useCart } from './context/CartContext';
+import ProductService from './api/product.service';
+import SidebarFilter from './components/SidebarFilter';
+import { filterConfig } from './config/filterConfig';
+import { Filter } from 'lucide-react';
 
-// --- BASE DE DATOS DE PRODUCTOS ---
-const products = [
-  {
-    id: 1,
-    brand: "Lattafa",
-    name: "Khamrah",
-    price: "95000",
-    img: "/img_22278_190023cabc7.webp",
-    category: "arabes",
-    description: "Una experiencia sensorial opulenta que rinde homenaje a la cultura del perfume árabe. Khamrah es una fragancia densa, dulce y sofisticada, presentada en un frasco que evoca el lujo de los cristales tallados.",
-    notes: {
-      top: "Canela, Nuez Moscada y Bergamota",
-      heart: "Dátiles, Praliné, Nardo y Azucena",
-      base: "Vainilla, Haba Tonka, Amberwood, Mirra y Benjuí"
-    }
-  },
-  {
-    id: 2,
-    brand: "Afnan",
-    name: "9 PM",
-    price: "78000",
-    img: "/9pm-Eau-De-Parfum-de-Afnan-100ml-scaled.webp",
-    category: "arabes",
-    description: "Diseñada para la vida nocturna. 9 PM es una fragancia magnética que combina frescura frutal con una base profundamente dulce y masculina.",
-    notes: {
-      top: "Manzana, Canela, Lavanda silvestre y Bergamota",
-      heart: "Flor de Azahar del Naranjo y Lirio de los Valles",
-      base: "Vainilla, Haba Tonka, Ámbar y Pachulí"
-    }
-  },
-  {
-    id: 3,
-    brand: "Armaf",
-    name: "Club de Nuit",
-    price: "89000",
-    img: "/club-de-nuit-man-edt-3.webp",
-    category: "arabes",
-    description: "Un ícono de la perfumería moderna. Esta fragancia personifica la elegancia atemporal y la fuerza masculina con un toque ahumado.",
-    notes: {
-      top: "Limón, Piña, Bergamota, Grosella Negra y Manzana",
-      heart: "Abedul, Jazmín y Rosa",
-      base: "Almizcle, Ámbar Gris, Pachulí y Vainilla"
-    }
-  },
-  {
-    id: 4,
-    brand: "Lattafa",
-    name: "Yara",
-    price: "72000",
-    img: "/img-8149-8b35205fc6cb9fae2017180408689578-1024-1024.webp",
-    category: "arabes",
-    description: "La fragancia femenina más viral. Un abrazo de dulzura cremosa, mezcla de frutas tropicales y vainilla.",
-    notes: {
-      top: "Orquídea, Heliotropo y Mandarina",
-      heart: "Acorde Gourmand y Frutas Tropicales",
-      base: "Vainilla, Almizcle y Sándalo"
-    }
-  },
-  {
-    id: 5,
-    brand: "Niche",
-    name: "Royal Oud",
-    price: "150000",
-    img: "/img_22278_190023cabc7.webp",
-    category: "nicho",
-    description: "Una joya de la colección privada. Utiliza el aceite de madera de agar (Oud) más puro.",
-    notes: {
-      top: "Pimienta Rosa, Lima y Bergamota",
-      heart: "Cedro, Angélica y Gálbano",
-      base: "Oud Real, Sándalo y Almizcle Tonka"
-    }
-  },
-  {
-    id: 6,
-    brand: "Luxury",
-    name: "Fresh Deodorant",
-    price: "12000",
-    img: "/9pm-Eau-De-Parfum-de-Afnan-100ml-scaled.webp",
-    category: "desodorantes",
-    description: "Protección de alto rendimiento formulada con aceites esenciales.",
-    notes: {
-      top: "Menta Fresca y Eucalipto",
-      heart: "Salvia Blanca",
-      base: "Almizcle Limpio"
-    }
-  }
-];
+// --- MAPEO DE CATEGORÍAS ---
+// Mapea las URLs amigables a los nombres exactos en la base de datos
+const CATEGORY_MAP = {
+  'arabes': 'Perfumes árabes',
+  'nicho': 'Perfumes de nicho',
+  'desodorantes': 'Desodorantes árabes'
+};
 
 const catalogCategories = [
-  { id: 1, title: "Perfumes Árabes", subtitle: "Tradición y Opulencia", img: "https://images.unsplash.com/photo-1615631648086-325025c9e51e?q=80&w=1000&auto=format&fit=crop", path: "arabes" },
-  { id: 2, title: "Perfumes de Nicho", subtitle: "Exclusividad Pura", img: "https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=1000&auto=format&fit=crop", path: "nicho" },
-  { id: 3, title: "Desodorantes", subtitle: "Frescura Diaria", img: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?q=80&w=1000&auto=format&fit=crop", path: "desodorantes" }
+  { id: 1, title: "Perfumes Árabes", subtitle: "Tradición y Opulencia", img: "https://images.unsplash.com/photo-1615631648086-325025c9e51e?q=80&w=1000&auto=format&fit=crop", path: "arabes", dbCategory: "Perfumes árabes" },
+  { id: 2, title: "Perfumes de Nicho", subtitle: "Exclusividad Pura", img: "https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=1000&auto=format&fit=crop", path: "nicho", dbCategory: "Perfumes de nicho" },
+  { id: 3, title: "Desodorantes", subtitle: "Frescura Diaria", img: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?q=80&w=1000&auto=format&fit=crop", path: "desodorantes", dbCategory: "Desodorantes árabes" }
 ];
 
 // --- COMPONENTES DE APOYO ---
@@ -130,13 +56,16 @@ const ArabicBrandBanner = () => {
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
+  const productId = product._id || product.id;
+  const productImage = product.image || product.img;
+
   return (
     <motion.div className="group relative bg-[#0a0a0a] border border-white/5 p-4 hover:border-[#c2a35d]/30 transition-all duration-500 shadow-xl flex flex-col h-full">
-      <Link to={`/product/${product.id}`} className="aspect-[3/4] overflow-hidden mb-4 bg-black relative block">
-        <img src={product.img} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
+      <Link to={`/product/${productId}`} className="aspect-[3/4] overflow-hidden mb-4 bg-black relative block">
+        <img src={productImage} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
       </Link>
       <p className="text-[#c2a35d] text-[10px] md:text-[9px] tracking-[0.2em] uppercase mb-1 text-center font-light">{product.brand}</p>
-      <Link to={`/product/${product.id}`}>
+      <Link to={`/product/${productId}`}>
         <h3 className="text-white text-sm md:text-xs font-bold tracking-widest mb-1 uppercase text-center italic hover:text-[#c2a35d] transition-colors line-clamp-1">{product.name}</h3>
       </Link>
       <p className="text-white font-light text-base md:text-sm mb-4 text-center tracking-widest opacity-90">$ {Number(product.price).toLocaleString()}</p>
@@ -146,62 +75,105 @@ const ProductCard = ({ product }) => {
 };
 
 // --- VISTAS / PÁGINAS ---
-const Home = ({ loading }) => (
-  <div className={`transition-opacity duration-1000 ${loading ? 'opacity-0' : 'opacity-100'}`}>
-    <header className="relative h-[85vh] flex flex-col items-center justify-center text-center px-6 overflow-hidden">
-      <video className="absolute inset-0 w-full h-full object-cover z-0 grayscale-[0.3]" autoPlay loop muted playsInline>
-        <source src={videoBg} type="video/mp4" />
-      </video>
-      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black z-10"></div>
-      <div className="relative z-20">
-        <motion.h1 initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-[#c2a35d] text-5xl md:text-8xl font-extralight uppercase tracking-tighter mb-4 italic">ARABIAN EXCLUSIVE</motion.h1>
-        <motion.p className="text-white text-xs md:text-[11px] uppercase tracking-[0.6em] font-light">San Juan - Argentina</motion.p>
-      </div>
-    </header>
+const Home = ({ loading }) => {
+  const [products, setProducts] = useState([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
 
-    <ArabicBrandBanner />
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await ProductService.getAll();
+        console.log('Productos recibidos desde la API:', data);
+        setProducts(data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      } finally {
+        setLoadingProducts(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
-    <section className="max-w-[1440px] mx-auto px-6 py-24">
-      <div className="text-center mb-16">
-        <h2 className="text-[#c2a35d] text-xs uppercase tracking-[0.6em] mb-4">Nuestras Colecciones</h2>
-        <p className="text-white text-3xl md:text-3xl font-light uppercase tracking-widest italic">Explora el Universo</p>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {catalogCategories.map((cat) => (
-          <Link to={`/category/${cat.path}`} key={cat.id} className="group relative h-[400px] md:h-[450px] overflow-hidden border border-white/10">
-            <img src={cat.img} alt={cat.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-60 group-hover:opacity-80" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
-            <div className="absolute inset-0 flex flex-col items-center justify-end pb-12 px-6">
-              <span className="text-[#c2a35d] text-xs uppercase tracking-[0.4em] mb-3 italic">{cat.subtitle}</span>
-              <h3 className="text-white text-2xl md:text-2xl font-light uppercase tracking-[0.3em] mb-4">{cat.title}</h3>
-              <div className="w-12 h-[1px] bg-[#c2a35d]" />
-            </div>
-          </Link>
-        ))}
-      </div>
-    </section>
+  return (
+    <div className={`transition-opacity duration-1000 ${loading ? 'opacity-0' : 'opacity-100'}`}>
+      <header className="relative h-[85vh] flex flex-col items-center justify-center text-center px-6 overflow-hidden">
+        <video className="absolute inset-0 w-full h-full object-cover z-0 grayscale-[0.3]" autoPlay loop muted playsInline>
+          <source src={videoBg} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black z-10"></div>
+        <div className="relative z-20">
+          <motion.h1 initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-[#c2a35d] text-5xl md:text-8xl font-extralight uppercase tracking-tighter mb-4 italic">ARABIAN EXCLUSIVE</motion.h1>
+          <motion.p className="text-white text-xs md:text-[11px] uppercase tracking-[0.6em] font-light">San Juan - Argentina</motion.p>
+        </div>
+      </header>
 
-    <main className="max-w-[1440px] mx-auto px-6 py-20 bg-[#050505]">
-      <div className="text-center mb-16">
-        <span className="text-[#c2a35d] text-xs uppercase tracking-[0.5em] block mb-4 italic">Fragancias de Autor</span>
-        <h2 className="text-white text-3xl md:text-4xl font-light tracking-[0.2em] uppercase italic">Seleccionados</h2>
-      </div>
-      <div className="flex overflow-x-auto gap-4 pb-10 snap-x md:grid md:grid-cols-4 md:gap-8 md:overflow-visible no-scrollbar">
-        {products.map(product => (
-          <div key={product.id} className="min-w-[75%] md:min-w-0 flex-shrink-0 snap-start">
-            <ProductCard product={product} />
+      <ArabicBrandBanner />
+
+      <section className="max-w-[1440px] mx-auto px-6 py-24">
+        <div className="text-center mb-16">
+          <h2 className="text-[#c2a35d] text-xs uppercase tracking-[0.6em] mb-4">Nuestras Colecciones</h2>
+          <p className="text-white text-3xl md:text-3xl font-light uppercase tracking-widest italic">Explora el Universo</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {catalogCategories.map((cat) => (
+            <Link to={`/category/${cat.path}`} key={cat.id} className="group relative h-[400px] md:h-[450px] overflow-hidden border border-white/10">
+              <img src={cat.img} alt={cat.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-60 group-hover:opacity-80" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+              <div className="absolute inset-0 flex flex-col items-center justify-end pb-12 px-6">
+                <span className="text-[#c2a35d] text-xs uppercase tracking-[0.4em] mb-3 italic">{cat.subtitle}</span>
+                <h3 className="text-white text-2xl md:text-2xl font-light uppercase tracking-[0.3em] mb-4">{cat.title}</h3>
+                <div className="w-12 h-[1px] bg-[#c2a35d]" />
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <main className="max-w-[1440px] mx-auto px-6 py-20 bg-[#050505]">
+        <div className="text-center mb-16">
+          <span className="text-[#c2a35d] text-xs uppercase tracking-[0.5em] block mb-4 italic">Fragancias de Autor</span>
+          <h2 className="text-white text-3xl md:text-4xl font-light tracking-[0.2em] uppercase italic">Seleccionados</h2>
+        </div>
+        {loadingProducts ? (
+          <div className="text-center text-white/50 py-20">Cargando productos...</div>
+        ) : products.length === 0 ? (
+          <div className="text-center text-white/50 py-20">No hay productos disponibles</div>
+        ) : (
+          <div className="flex overflow-x-auto gap-4 pb-10 snap-x md:grid md:grid-cols-4 md:gap-8 md:overflow-visible no-scrollbar">
+            {products.slice(0, 4).map(product => (
+              <div key={product._id} className="min-w-[75%] md:min-w-0 flex-shrink-0 snap-start">
+                <ProductCard product={product} />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </main>
-  </div>
-);
+        )}
+      </main>
+    </div>
+  );
+};
 
 const ProductDetail = () => {
   const { id } = useParams();
   const { addToCart } = useCart();
-  const product = products.find(p => p.id === parseInt(id));
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const data = await ProductService.getById(id);
+        console.log('Producto individual recibido:', data);
+        setProduct(data);
+      } catch (error) {
+        console.error('Error fetching product:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, [id]);
+
+  if (loading) return <div className="text-white text-center py-40 font-serif tracking-widest">CARGANDO...</div>;
   if (!product) return <div className="text-white text-center py-40 font-serif tracking-widest">PRODUCTO NO ENCONTRADO</div>;
 
   return (
@@ -210,7 +182,7 @@ const ProductDetail = () => {
         <Link to="/" className="text-[#c2a35d] text-xs uppercase tracking-[0.3em] mb-12 inline-block hover:text-white transition-colors">← Volver al catálogo</Link>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="relative group overflow-hidden border border-white/10 bg-[#0a0a0a] p-8 rounded-lg">
-            <img src={product.img} alt={product.name} className="w-full h-auto object-contain max-h-[500px]" />
+            <img src={product.image || product.img} alt={product.name} className="w-full h-auto object-contain max-h-[500px]" />
           </motion.div>
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-8">
             <div>
@@ -218,15 +190,17 @@ const ProductDetail = () => {
               <h1 className="text-4xl md:text-6xl font-light uppercase tracking-tighter italic">{product.name}</h1>
               <p className="text-2xl mt-4 font-extralight text-white/80">$ {Number(product.price).toLocaleString()}</p>
             </div>
-            <p className="text-gray-400 leading-relaxed font-light text-lg">{product.description}</p>
-            <div className="border-y border-white/10 py-8 space-y-6">
-              <h3 className="text-[#c2a35d] text-xs uppercase tracking-[0.5em] font-bold">Pirámide Olfativa</h3>
-              <div className="grid grid-cols-1 gap-6">
-                <div><span className="text-[10px] text-[#c2a35d] uppercase block tracking-widest mb-1">Notas de Salida</span><p className="italic font-light text-white/90">{product.notes.top}</p></div>
-                <div><span className="text-[10px] text-[#c2a35d] uppercase block tracking-widest mb-1">Corazón</span><p className="italic font-light text-white/90">{product.notes.heart}</p></div>
-                <div><span className="text-[10px] text-[#c2a35d] uppercase block tracking-widest mb-1">Fondo</span><p className="italic font-light text-white/90">{product.notes.base}</p></div>
+            {product.description && <p className="text-gray-400 leading-relaxed font-light text-lg">{product.description}</p>}
+            {product.notes && (
+              <div className="border-y border-white/10 py-8 space-y-6">
+                <h3 className="text-[#c2a35d] text-xs uppercase tracking-[0.5em] font-bold">Pirámide Olfativa</h3>
+                <div className="grid grid-cols-1 gap-6">
+                  {product.notes.head && <div><span className="text-[10px] text-[#c2a35d] uppercase block tracking-widest mb-1">Notas de Salida</span><p className="italic font-light text-white/90">{product.notes.head.join(', ')}</p></div>}
+                  {product.notes.heart && <div><span className="text-[10px] text-[#c2a35d] uppercase block tracking-widest mb-1">Corazón</span><p className="italic font-light text-white/90">{product.notes.heart.join(', ')}</p></div>}
+                  {product.notes.base && <div><span className="text-[10px] text-[#c2a35d] uppercase block tracking-widest mb-1">Fondo</span><p className="italic font-light text-white/90">{product.notes.base.join(', ')}</p></div>}
+                </div>
               </div>
-            </div>
+            )}
             <button onClick={() => addToCart(product)} className="w-full bg-[#c2a35d] text-black py-5 text-xs font-bold uppercase tracking-[0.2em] hover:bg-white transition-all duration-500 shadow-lg">Añadir a mi colección</button>
           </motion.div>
         </div>
@@ -237,21 +211,119 @@ const ProductDetail = () => {
 
 const CategoryPage = () => {
   const { categoryId } = useParams();
-  const filteredProducts = products.filter(p => p.category === categoryId);
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedFilters, setSelectedFilters] = useState({});
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
   const categoryInfo = catalogCategories.find(c => c.path === categoryId);
+  const dbCategoryName = CATEGORY_MAP[categoryId];
+
+  // Get config for current category
+  const currentFilters = filterConfig[dbCategoryName] || [];
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const data = await ProductService.getAll();
+        console.log('Productos recibidos:', data);
+
+        // Initial filter by category
+        const categoryProducts = data.filter(p => p.category === dbCategoryName);
+        setProducts(categoryProducts);
+        setFilteredProducts(categoryProducts);
+
+        // Reset filters when category changes
+        setSelectedFilters({});
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, [categoryId, dbCategoryName]);
+
+  // Apply filters
+  useEffect(() => {
+    let result = products;
+
+    // Apply each active filter
+    Object.entries(selectedFilters).forEach(([filterId, values]) => {
+      if (values.length > 0) {
+        result = result.filter(product => {
+          const productValue = product[filterId];
+          if (!productValue) return false;
+          return values.includes(productValue);
+        });
+      }
+    });
+
+    setFilteredProducts(result);
+  }, [selectedFilters, products]);
+
+  const handleFilterChange = (filterId, values) => {
+    setSelectedFilters(prev => ({
+      ...prev,
+      [filterId]: values
+    }));
+  };
 
   return (
     <div className="bg-black min-h-screen pt-32 pb-20">
       <div className="max-w-[1440px] mx-auto px-6">
         <div className="mb-12">
           <Link to="/" className="text-[#c2a35d] text-xs uppercase tracking-[0.3em] mb-6 inline-block hover:text-white transition-colors">← Volver al Inicio</Link>
-          <h1 className="text-white text-4xl md:text-6xl font-extralight uppercase tracking-tighter italic">{categoryInfo?.title || "Colección"}</h1>
-          <p className="text-[#c2a35d] text-xs uppercase tracking-[0.4em] mt-3">{categoryInfo?.subtitle}</p>
+          <div className="flex items-end justify-between">
+            <div>
+              <h1 className="text-white text-4xl md:text-6xl font-extralight uppercase tracking-tighter italic">{categoryInfo?.title || "Colección"}</h1>
+              <p className="text-[#c2a35d] text-xs uppercase tracking-[0.4em] mt-3">{categoryInfo?.subtitle}</p>
+            </div>
+
+            {/* Mobile Filter Button */}
+            <button
+              onClick={() => setIsFilterOpen(true)}
+              className="md:hidden flex items-center gap-2 text-[#c2a35d] border border-[#c2a35d]/30 px-4 py-2 uppercase text-[10px] tracking-widest font-bold"
+            >
+              <Filter size={14} /> Filtrar
+            </button>
+          </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          {filteredProducts.map(product => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+
+        <div className="flex gap-12">
+          {/* Sidebar Filters */}
+          <SidebarFilter
+            filters={currentFilters}
+            selectedFilters={selectedFilters}
+            onChange={handleFilterChange}
+            isOpen={isFilterOpen}
+            onClose={() => setIsFilterOpen(false)}
+          />
+
+          {/* Product Grid */}
+          <div className="flex-1">
+            {loading ? (
+              <div className="text-center text-white/50 py-20">Cargando productos...</div>
+            ) : filteredProducts.length === 0 ? (
+              <div className="text-center py-20 border border-white/5 bg-[#0a0a0a]">
+                <p className="text-white/50 text-lg mb-4">No hay perfumes que coincidan con los filtros</p>
+                <button
+                  onClick={() => setSelectedFilters({})}
+                  className="text-[#c2a35d] text-xs uppercase tracking-widest hover:underline"
+                >
+                  Limpiar filtros
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
+                {filteredProducts.map(product => (
+                  <ProductCard key={product._id} product={product} />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -281,8 +353,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Home loading={loading} />} />
           <Route path="/auth" element={<AuthPage />} />
+          <Route path="/admin" element={<AdminPanel />} />
           <Route path="/category/:categoryId" element={<CategoryPage />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/product/:productId" element={<ProductDetail />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
         </Routes>
 
         {/* Footer Global */}

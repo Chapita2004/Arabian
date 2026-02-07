@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const productController = require('../controllers/productController');
-// const auth = require('../middlewares/authMiddleware'); // Uncomment for protected routes later
+const auth = require('../middlewares/authMiddleware');
+const admin = require('../middlewares/adminMiddleware');
 
 router.get('/', productController.getProducts);
 router.get('/:id', productController.getProductById);
-router.post('/', productController.createProduct); // Protect this route
-router.put('/:id', productController.updateProduct); // Protect this route
-router.delete('/:id', productController.deleteProduct); // Protect this route
+router.post('/', auth, admin, productController.createProduct);
+router.put('/:id', auth, admin, productController.updateProduct);
+router.delete('/:id', auth, admin, productController.deleteProduct);
 
 module.exports = router;

@@ -1,10 +1,10 @@
 import api from './api';
 
 const PaymentService = {
-    createPreference: async (items) => {
-        // items should be an array of { id, title, quantity, price }
-        const response = await api.post('/payment/create-preference', { items });
-        return response.data; // Should return { id: 'preference_id' }
+    createPreference: async (orderData) => {
+        // orderData should be { items: [...], payer: {...} }
+        const response = await api.post('/payment/create-preference', orderData);
+        return response.data; // Should return { id: 'preference_id', init_point: '...' }
     },
 };
 

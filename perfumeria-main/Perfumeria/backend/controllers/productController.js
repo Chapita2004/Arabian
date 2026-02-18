@@ -8,8 +8,9 @@ exports.getProducts = async (req, res) => {
         const products = await Product.find();
         res.json(products);
     } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server Error');
+        console.error('Error fetching products:', err.message);
+        // Graceful degradation: Return empty array instead of 500 error
+        res.json([]);
     }
 };
 
@@ -32,7 +33,11 @@ exports.getProductById = async (req, res) => {
 // @route   POST /api/products
 // @access  Private (Admin only - TODO: Add admin middleware check)
 exports.createProduct = async (req, res) => {
-    const { name, brand, price, stock, description, image, category, notes } = req.body;
+    const {
+        name, brand, price, stock, description,
+        image, images, category, notes,
+        gender, size, concentration, olfactoryFamily
+    } = req.body;
 
     try {
         const newProduct = new Product({
@@ -42,8 +47,13 @@ exports.createProduct = async (req, res) => {
             stock,
             description,
             image,
+            images,
             category,
-            notes
+            notes,
+            gender,
+            size,
+            concentration,
+            olfactoryFamily
         });
 
         const product = await newProduct.save();
@@ -63,7 +73,11 @@ exports.updateProduct = async (req, res) => {
         if (!product) return res.status(404).json({ msg: 'Product not found' });
 
         // Update fields if they exist in body
-        const fields = ['name', 'brand', 'price', 'stock', 'description', 'image', 'category', 'notes'];
+        const fields = [
+            'name', 'brand', 'price', 'stock', 'description',
+            'image', 'images', 'category', 'notes',
+            'gender', 'size', 'concentration', 'olfactoryFamily'
+        ];
         fields.forEach(field => {
             if (req.body[field] !== undefined) product[field] = req.body[field];
         });

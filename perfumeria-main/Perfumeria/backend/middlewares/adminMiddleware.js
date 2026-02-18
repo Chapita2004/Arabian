@@ -9,8 +9,8 @@ module.exports = async function (req, res, next) {
             return res.status(404).json({ msg: 'User not found' });
         }
 
-        // Check if user has admin role
-        if (user.role !== 'admin') {
+        // Check if user has admin or superadmin role
+        if (!['admin', 'superadmin'].includes(user.role)) {
             return res.status(403).json({ msg: 'Access denied. Admin privileges required.' });
         }
 

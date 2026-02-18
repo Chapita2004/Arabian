@@ -22,7 +22,13 @@ const ProductSchema = new mongoose.Schema({
         type: String
     },
     image: {
-        type: String // URL to image
+        type: String // URL to image (deprecated, use images array)
+    },
+    images: {
+        type: [String], // Array of image URLs
+        default: function () {
+            return this.image ? [this.image] : [];
+        }
     },
     category: {
         type: String,
@@ -50,6 +56,17 @@ const ProductSchema = new mongoose.Schema({
         head: [String],
         heart: [String],
         base: [String]
+    },
+    averageRating: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 5
+    },
+    reviewCount: {
+        type: Number,
+        default: 0,
+        min: 0
     }
 }, { timestamps: true });
 

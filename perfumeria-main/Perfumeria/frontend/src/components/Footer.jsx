@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const Footer = () => {
     return (
         <footer className="bg-[#050505] border-t border-white/5 pt-16 pb-8 px-6 font-sans">
-            <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+            <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-5 gap-12">
 
                 {/* Columna 1: Branding */}
                 <div className="space-y-6">
@@ -33,10 +33,21 @@ const Footer = () => {
 
                 {/* Columna 3: Información */}
                 <div>
+                    <h4 className="text-[#c2a35d] text-[11px] font-bold uppercase tracking-[0.3em] mb-6">Información Legal</h4>
+                    <ul className="space-y-3 text-[11px] text-gray-400 uppercase tracking-widest">
+                        <li><Link to="/terminos-y-condiciones" className="hover:text-white transition-colors">Términos y Condiciones</Link></li>
+                        <li><Link to="/politica-de-privacidad" className="hover:text-white transition-colors">Política de Privacidad</Link></li>
+                        <li><Link to="/politica-de-envios" className="hover:text-white transition-colors">Envíos</Link></li>
+                        <li><Link to="/politica-de-devoluciones" className="hover:text-white transition-colors">Devoluciones</Link></li>
+                    </ul>
+                </div>
+
+                {/* Columna 3.5: Ayuda */}
+                <div>
                     <h4 className="text-[#c2a35d] text-[11px] font-bold uppercase tracking-[0.3em] mb-6">Ayuda</h4>
                     <ul className="space-y-3 text-[11px] text-gray-400 uppercase tracking-widest">
-                        <li><a href="#" className="hover:text-white transition-colors">Términos y Condiciones</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Políticas de Envío</a></li>
+                        <li><Link to="/sobre-nosotros" className="hover:text-white transition-colors">Sobre Nosotros</Link></li>
+                        <li><Link to="/preguntas-frecuentes" className="hover:text-white transition-colors">FAQ</Link></li>
                         <li><Link to="/auth" className="hover:text-white transition-colors">Mi Cuenta</Link></li>
                     </ul>
                 </div>

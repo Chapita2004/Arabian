@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ShoppingBag, Menu, X, User, LogOut, Search } from 'lucide-react';
+import { ShoppingBag, Menu, X, User, LogOut, Search, Settings, Package, Heart } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 import { useAuth } from '../context/authContext';
 import ProductService from '../api/product.service';
 
 // IMPORTACIÓN DEL LOGO
-// Asumiendo que Navbar.jsx está en src/components y la imagen en public
-import logoArabian from '../../public/logo-arabian.png';
+// En Vite, los archivos en public/ se sirven desde la raíz
+// No necesitamos importar, solo referenciar la ruta
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { setIsCartOpen, cartCount } = useCart();
+  const { wishlistCount } = useWishlist();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -104,7 +106,7 @@ const Navbar = () => {
         {/* LOGO */}
         <Link to="/" className="flex items-center flex-shrink-0">
           <img
-            src={logoArabian}
+            src="/logo-arabian.png"
             alt="Arabian Exclusive Logo"
             className="h-12 md:h-16 w-auto object-contain transition-transform duration-300 hover:scale-105"
           />
@@ -175,13 +177,40 @@ const Navbar = () => {
         </div>
 
         {/* USER & CART */}
-        <div className="flex items-center space-x-4 md:space-x-6 flex-shrink-0">
+        <div className="flex items-center space-x-3 md:space-x-4 flex-shrink-0">
           {user ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 md:gap-3">
               <span className="hidden md:block text-[#c2a35d] text-[10px] font-bold tracking-widest uppercase border border-[#c2a35d]/30 px-3 py-1 italic">
                 Hola, {user.name}
               </span>
-              <button onClick={handleLogout} className="text-white/40 hover:text-red-500 transition-colors">
+
+              {/* Mis Pedidos - Visible para todos los usuarios autenticados */}
+              <Link
+                to="/mis-pedidos"
+                className="text-[#c2a35d] hover:text-white transition-colors flex items-center gap-1 group"
+                title="Mis Pedidos"
+              >
+                <Package size={18} strokeWidth={1.5} />
+                <span className="hidden lg:inline text-[10px] font-bold uppercase tracking-widest group-hover:text-white transition-colors">
+                  Pedidos
+                </span>
+              </Link>
+
+              {/* Admin Panel - Solo visible para admins */}
+              {['admin', 'superadmin'].includes(user.role) && (
+                <Link
+                  to="/admin"
+                  className="text-[#c2a35d] hover:text-white transition-colors flex items-center gap-1 group border border-[#c2a35d]/30 px-2 py-1 hover:border-[#c2a35d] hover:bg-[#c2a35d]/10"
+                  title="Panel de Admin"
+                >
+                  <Settings size={16} strokeWidth={1.5} />
+                  <span className="hidden lg:inline text-[9px] font-bold uppercase tracking-widest group-hover:text-white transition-colors">
+                    Admin
+                  </span>
+                </Link>
+              )}
+
+              <button onClick={handleLogout} className="text-white/40 hover:text-red-500 transition-colors" title="Cerrar Sesión">
                 <LogOut size={16} />
               </button>
             </div>
@@ -191,6 +220,16 @@ const Navbar = () => {
               <span className="hidden md:inline ml-1 text-[10px] font-bold uppercase tracking-widest">Cuenta</span>
             </Link>
           )}
+
+          {/* Wishlist Button */}
+          <Link to="/wishlist" className="text-[#c2a35d] flex items-center hover:text-white transition-colors relative" title="Mis Favoritos">
+            <Heart size={20} strokeWidth={1.5} />
+            {wishlistCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-white text-black text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
+                {wishlistCount}
+              </span>
+            )}
+          </Link>
 
           <button onClick={() => setIsCartOpen(true)} className="text-[#c2a35d] flex items-center hover:text-white transition-colors relative">
             <ShoppingBag size={20} strokeWidth={1.5} />

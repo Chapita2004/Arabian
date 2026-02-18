@@ -3,7 +3,7 @@ import { ShoppingBag, Menu, X, User, LogOut, Search, Settings, Package, Heart } 
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
-import { useAuth } from '../context/authContext';
+import { useAuth } from '../context/AuthContext';
 import ProductService from '../api/product.service';
 
 // IMPORTACIÓN DEL LOGO

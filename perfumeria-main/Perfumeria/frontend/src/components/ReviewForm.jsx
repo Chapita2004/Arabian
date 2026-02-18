@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import StarRating from './StarRating';
 import ReviewService from '../api/review.service';
-import { useAuth } from '../context/authContext';
+import { useAuth } from '../context/AuthContext';
 
 const ReviewForm = ({ productId, onReviewSubmitted }) => {
     const { user } = useAuth();

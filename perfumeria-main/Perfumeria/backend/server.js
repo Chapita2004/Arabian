@@ -20,7 +20,12 @@ app.use((req, res, next) => {
 });
 
 // Configuración de CORS
-const whiteList = [process.env.FRONTEND_URL, 'http://localhost:5173', 'http://localhost:5000'];
+const whiteList = [process.env.FRONTEND_URL,
+    'http://localhost:5173',
+    'http://localhost:5000',
+    'https://arabianexclusive.com',
+    'https://www.arabianexclusive.com'
+];
 app.use(cors({
     origin: function (origin, callback) {
         if (!origin || whiteList.indexOf(origin) !== -1) {

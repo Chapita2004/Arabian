@@ -50,10 +50,21 @@ app.use('/api/reviews', require('./routes/reviewRoutes'));
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
+    // Rutas de API no encontradas → 404 JSON (no devolver el index.html de React)
+    app.use('/api', (req, res) => {
+        res.status(404).json({ message: `Ruta no encontrada: ${req.method} ${req.originalUrl}` });
+    });
+
+    // Cualquier otra ruta → devolver el index.html del frontend
     app.get('*', (req, res) => {
         res.sendFile(path.resolve(__dirname, '../frontend', 'dist', 'index.html'));
     });
 } else {
+    // Rutas de API no encontradas en desarrollo
+    app.use('/api', (req, res) => {
+        res.status(404).json({ message: `Ruta no encontrada: ${req.method} ${req.originalUrl}` });
+    });
+
     app.get('/', (req, res) => {
         res.send('API is running...');
     });

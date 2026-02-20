@@ -1,35 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
   <!-- Homepage -->
   <url>
     <loc>https://arabianexclusive.com/</loc>
-    <lastmod>2026-02-09</lastmod>
+    <lastmod>2026-02-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-  
+
   <!-- Category Pages -->
   <url>
     <loc>https://arabianexclusive.com/category/arabes</loc>
-    <lastmod>2026-02-09</lastmod>
+    <lastmod>2026-02-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-  
+
   <url>
     <loc>https://arabianexclusive.com/category/nicho</loc>
-    <lastmod>2026-02-09</lastmod>
+    <lastmod>2026-02-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-  
+
   <url>
     <loc>https://arabianexclusive.com/category/desodorantes</loc>
-    <lastmod>2026-02-09</lastmod>
+    <lastmod>2026-02-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-  
-  <!-- Note: Individual product URLs should be generated dynamically by the backend -->
-  <!-- This is a basic sitemap. For a complete solution, create a dynamic sitemap endpoint in your backend -->
+
+  <!-- Legal Pages -->
+  <url>
+    <loc>https://arabianexclusive.com/nosotros</loc>
+    <lastmod>2026-02-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://arabianexclusive.com/terminos</loc>
+    <lastmod>2026-02-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://arabianexclusive.com/privacidad</loc>
+    <lastmod>2026-02-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://arabianexclusive.com/envios</loc>
+    <lastmod>2026-02-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://arabianexclusive.com/devoluciones</loc>
+    <lastmod>2026-02-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://arabianexclusive.com/faq</loc>
+    <lastmod>2026-02-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
 </urlset>

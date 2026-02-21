@@ -193,9 +193,34 @@ const Home = ({ loading }) => {
           <source src={videoBg} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black z-10"></div>
-        <div className="relative z-20">
-          <motion.h1 initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-[#c2a35d] text-4xl md:text-6xl font-extralight uppercase tracking-tighter mb-4 italic">ARABIAN EXCLUSIVE</motion.h1>
-          <motion.p className="text-white text-xs md:text-[11px] uppercase tracking-[0.6em] font-light">San Juan - Argentina</motion.p>
+        <div className="relative z-20 flex flex-col items-center gap-6">
+          {/* Ícono 1 — Logo principal Arabian Exclusive */}
+          <motion.img
+            src="/logo-arabian.png"
+            alt="Arabian Exclusive Logo"
+            initial={{ opacity: 0, scale: 0.8, y: -20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.9, ease: "easeOut", delay: 0.3 }}
+            className="w-36 md:w-48 drop-shadow-[0_0_18px_rgba(194,163,93,0.5)] invert"
+          />
+          {/* Ícono 2 — Sello Perfumes Árabes 100% Originales */}
+          <motion.img
+            src="/sello-arabian.png"
+            alt="Perfumes Árabes 100% Originales"
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.9, ease: "easeOut", delay: 1.4 }}
+            className="w-24 md:w-32 drop-shadow-[0_0_14px_rgba(194,163,93,0.4)] invert"
+          />
+          {/* Texto */}
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 2.3 }}
+            className="text-white text-xs md:text-[11px] uppercase tracking-[0.6em] font-light"
+          >
+            San Juan - Argentina
+          </motion.p>
         </div>
       </header>
 

@@ -62,7 +62,48 @@ const PreLoader = () => (
   </motion.div>
 );
 
+
+const icons = [
+  { src: "/logo-arabian.png", alt: "Arabian Exclusive Logo", size: "w-40 md:w-56" },
+  { src: "/sello-arabian.png", alt: "Perfumes Árabes 100% Originales", size: "w-32 md:w-44" },
+];
+
+const HeroSection = () => {
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % icons.length);
+    }, 2800);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <header className="relative h-[85vh] flex flex-col items-center justify-center text-center px-6 overflow-hidden">
+      <video className="absolute inset-0 w-full h-full object-cover z-0 grayscale-[0.3]" autoPlay loop muted playsInline>
+        <source src={videoBg} type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black z-10"></div>
+      <div className="relative z-20 flex items-center justify-center" style={{ minHeight: 220 }}>
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={current}
+            src={icons[current].src}
+            alt={icons[current].alt}
+            initial={{ opacity: 0, scale: 0.75 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.15 }}
+            transition={{ duration: 0.75, ease: "easeInOut" }}
+            className={`${icons[current].size} drop-shadow-[0_0_24px_rgba(194,163,93,0.55)] invert`}
+          />
+        </AnimatePresence>
+      </div>
+    </header>
+  );
+};
+
 const ArabicBrandBanner = () => {
+
   const brands = ["Lattafa", "Afnan", "Armaf", "Rasasi", "Al Haramain", "Ajmal", "Ard Al Zaafaran", "Maison Alhambra", "Khalis"];
   return (
     <div className="bg-[#0a0a0a] py-10 border-y border-[#c2a35d]/10 overflow-hidden relative">
@@ -188,41 +229,7 @@ const Home = ({ loading }) => {
         type="website"
         schemaData={organizationSchema}
       />
-      <header className="relative h-[85vh] flex flex-col items-center justify-center text-center px-6 overflow-hidden">
-        <video className="absolute inset-0 w-full h-full object-cover z-0 grayscale-[0.3]" autoPlay loop muted playsInline>
-          <source src={videoBg} type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black z-10"></div>
-        <div className="relative z-20 flex flex-col items-center gap-6">
-          {/* Ícono 1 — Logo principal Arabian Exclusive */}
-          <motion.img
-            src="/logo-arabian.png"
-            alt="Arabian Exclusive Logo"
-            initial={{ opacity: 0, scale: 0.8, y: -20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: "easeOut", delay: 0.3 }}
-            className="w-36 md:w-48 drop-shadow-[0_0_18px_rgba(194,163,93,0.5)] invert"
-          />
-          {/* Ícono 2 — Sello Perfumes Árabes 100% Originales */}
-          <motion.img
-            src="/sello-arabian.png"
-            alt="Perfumes Árabes 100% Originales"
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: "easeOut", delay: 1.4 }}
-            className="w-24 md:w-32 drop-shadow-[0_0_14px_rgba(194,163,93,0.4)] invert"
-          />
-          {/* Texto */}
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 2.3 }}
-            className="text-white text-xs md:text-[11px] uppercase tracking-[0.6em] font-light"
-          >
-            San Juan - Argentina
-          </motion.p>
-        </div>
-      </header>
+      <HeroSection />
 
       <ArabicBrandBanner />
 

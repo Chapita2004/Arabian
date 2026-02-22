@@ -12,8 +12,7 @@ const Footer = () => {
                         ARABIAN <span className="block text-[10px] tracking-[0.8em] text-white/50">EXCLUSIVE</span>
                     </h3>
                     <p className="text-gray-400 text-xs leading-relaxed max-w-xs uppercase tracking-widest">
-                        San Juan, Argentina. <br />
-                        La esencia de la distinción en cada fragancia.
+                        Nosotros te asesoramos. Vos elegís qué dejar en el aire.
                     </p>
                     <div className="flex space-x-6 text-[#c2a35d]">
                         <a href="https://instagram.com" target="_blank" className="hover:text-white transition-colors">IG</a>

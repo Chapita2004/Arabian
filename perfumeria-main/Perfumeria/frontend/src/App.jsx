@@ -79,12 +79,12 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <header className="relative h-[85vh] flex flex-col items-center justify-center text-center px-6 overflow-hidden">
+    <header className="relative h-[60vh] md:h-[85vh] flex flex-col items-center justify-center text-center px-6 overflow-hidden">
       <video className="absolute inset-0 w-full h-full object-cover z-0 grayscale-[0.3]" autoPlay loop muted playsInline>
         <source src={videoBg} type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black z-10"></div>
-      <div className="relative z-20 flex items-center justify-center" style={{ minHeight: 220, mixBlendMode: 'multiply' }}>
+      <div className="relative z-20 flex items-center justify-center" style={{ minHeight: 160, mixBlendMode: 'multiply' }}>
         <AnimatePresence mode="wait">
           <motion.img
             key={current}
@@ -233,7 +233,7 @@ const Home = ({ loading }) => {
 
       <ArabicBrandBanner />
 
-      <section className="max-w-[1440px] mx-auto px-6 py-24 bg-perfume-pattern">
+      <section className="max-w-[1440px] mx-auto px-4 md:px-6 py-12 md:py-24 bg-perfume-pattern">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -244,7 +244,7 @@ const Home = ({ loading }) => {
           <h2 className="text-[#c2a35d] text-xs uppercase tracking-[0.6em] mb-4">Nuestras Colecciones</h2>
           <p className="text-white text-3xl md:text-3xl font-light uppercase tracking-widest italic">Explora el Universo</p>
         </motion.div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
           {catalogCategories.map((cat, index) => (
             <motion.div
               key={cat.id}
@@ -253,7 +253,7 @@ const Home = ({ loading }) => {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
             >
-              <Link to={`/category/${cat.path}`} className="group relative h-[400px] md:h-[450px] overflow-hidden border border-white/10 block">
+              <Link to={`/category/${cat.path}`} className="group relative h-[220px] md:h-[450px] overflow-hidden border border-white/10 block">
                 <img src={cat.img} alt={cat.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-60 group-hover:opacity-80" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
                 <div className="absolute inset-0 flex flex-col items-center justify-end pb-12 px-6">
@@ -267,7 +267,7 @@ const Home = ({ loading }) => {
         </div>
       </section>
 
-      <main className="max-w-[1440px] mx-auto px-6 py-20 bg-perfume-pattern">
+      <main className="max-w-[1440px] mx-auto px-4 md:px-6 py-10 md:py-20 bg-perfume-pattern">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -338,7 +338,7 @@ const Home = ({ loading }) => {
       </main>
 
       {/* Brand Showcase Section - El Balcón Style */}
-      <section className="max-w-[1440px] mx-auto px-6 py-20 bg-perfume-pattern">
+      <section className="max-w-[1440px] mx-auto px-4 md:px-6 py-10 md:py-20 bg-perfume-pattern">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}

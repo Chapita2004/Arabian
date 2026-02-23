@@ -16,6 +16,13 @@
     font-family: 'Lexend Zetta', sans-serif;
     @apply bg-black text-white;
     margin: 0;
+    overflow-x: hidden;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    overflow-x: hidden;
   }
 
   h1,
@@ -102,6 +109,13 @@
   opacity: 0.15;
   z-index: 0;
   pointer-events: none;
+}
+
+/* Fix para iOS Safari: background-attachment: fixed se bugea */
+@media (max-width: 768px) {
+  .bg-perfume-pattern::before {
+    background-attachment: scroll;
+  }
 }
 
 .bg-perfume-pattern>* {

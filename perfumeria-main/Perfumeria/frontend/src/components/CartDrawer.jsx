@@ -27,7 +27,7 @@ const CartDrawer = () => {
 
           <motion.div
             initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
-            className="fixed right-0 top-0 h-full w-full max-w-md bg-[#0a0a0a] border-l border-[#c2a35d]/30 z-[201] p-8 flex flex-col shadow-2xl"
+            className="fixed right-0 top-0 h-full w-full sm:max-w-md bg-[#0a0a0a] border-l border-[#c2a35d]/30 z-[201] p-5 md:p-8 flex flex-col shadow-2xl"
           >
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-[#c2a35d] text-xl font-bold tracking-tighter uppercase">Tu Bolsa</h2>

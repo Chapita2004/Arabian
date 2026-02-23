@@ -84,7 +84,7 @@ const HeroSection = () => {
         <source src={videoBg} type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black z-10"></div>
-      <div className="relative z-20 flex items-center justify-center" style={{ minHeight: 220 }}>
+      <div className="relative z-20 flex items-center justify-center" style={{ minHeight: 220, mixBlendMode: 'multiply' }}>
         <AnimatePresence mode="wait">
           <motion.img
             key={current}
@@ -94,7 +94,7 @@ const HeroSection = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.15 }}
             transition={{ duration: 0.75, ease: "easeInOut" }}
-            className={`${icons[current].size} drop-shadow-[0_0_24px_rgba(194,163,93,0.55)] invert`}
+            className={`${icons[current].size} drop-shadow-[0_0_24px_rgba(194,163,93,0.55)]`}
           />
         </AnimatePresence>
       </div>

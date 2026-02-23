@@ -1,0 +1,15 @@
+# Robots.txt for Arabian Exclusive
+# https://arabianexclusive.com/robots.txt
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /checkout
+Disallow: /auth
+Disallow: /mis-pedidos
+Disallow: /success
+Disallow: /failure
+Disallow: /pending
+
+# Sitemap
+Sitemap: https://arabianexclusive.com/sitemap.xml

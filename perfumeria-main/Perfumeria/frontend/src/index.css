@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Zetta:wght@100..900&display=swap');
+/* 1. IMPORTS (OBLIGATORIO AL PRINCIPIO) */
+@import "tailwindcss";
+
+/* 2. VARIABLES Y RESET */
+:root {
+  font-family: 'Lexend Zetta', sans-serif;
+}
+
+@layer base {
+  * {
+    font-family: 'Lexend Zetta', sans-serif;
+  }
+
+  body {
+    font-family: 'Lexend Zetta', sans-serif;
+    @apply bg-black text-white;
+    margin: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  div,
+  button,
+  input,
+  textarea,
+  select,
+  label {
+    font-family: 'Lexend Zetta', sans-serif;
+  }
+}
+
+/* 3. ANIMACIONES (CARRUSEL Y SEARCH) */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-scroll {
+  display: flex;
+  width: max-content;
+  animation: scroll 30s linear infinite;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+@media (max-width: 768px) {
+  .snap-x {
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .snap-center {
+    scroll-snap-align: center;
+  }
+}
+
+/* 4. BACKGROUND IMAGE */
+.bg-perfume-pattern {
+  position: relative;
+  background-color: #000;
+}
+
+.bg-perfume-pattern::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/ChatGPT Image 12 ene 2026, 04_59_16 p.m..png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  opacity: 0.15;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bg-perfume-pattern>* {
+  position: relative;
+  z-index: 1;
+}
+
+/* 5. TODO TU CSS RESTANTE (Aquí pegas las 900+ líneas) */

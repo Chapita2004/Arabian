@@ -64,8 +64,8 @@ const PreLoader = () => (
 
 
 const icons = [
-  { src: "/logo-arabian.png", alt: "Arabian Exclusive Logo", size: "w-40 md:w-56" },
-  { src: "/sello-arabian.png", alt: "Perfumes Árabes 100% Originales", size: "w-32 md:w-44" },
+  { src: "/logo-arabian.png", alt: "Arabian Exclusive Logo", size: "w-56 md:w-80" },
+  { src: "/sello-arabian.png", alt: "Perfumes Árabes 100% Originales", size: "w-44 md:w-64" },
 ];
 
 const HeroSection = () => {
@@ -84,7 +84,7 @@ const HeroSection = () => {
         <source src={videoBg} type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black z-10"></div>
-      <div className="relative z-20 flex items-center justify-center" style={{ minHeight: 160, mixBlendMode: 'multiply' }}>
+      <div className="relative z-20 flex items-center justify-center" style={{ minHeight: 200 }}>
         <AnimatePresence mode="wait">
           <motion.img
             key={current}
@@ -94,7 +94,7 @@ const HeroSection = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.15 }}
             transition={{ duration: 0.75, ease: "easeInOut" }}
-            className={`${icons[current].size} drop-shadow-[0_0_24px_rgba(194,163,93,0.55)]`}
+            className={`${icons[current].size} drop-shadow-[0_0_40px_rgba(194,163,93,0.8)]`}
           />
         </AnimatePresence>
       </div>

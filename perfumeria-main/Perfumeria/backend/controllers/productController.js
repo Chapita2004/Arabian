@@ -35,9 +35,12 @@ exports.getProductById = async (req, res) => {
 exports.createProduct = async (req, res) => {
     const {
         name, brand, price, stock, description,
-        image, images, category, notes,
+        images, category, notes,
         gender, size, concentration, olfactoryFamily
     } = req.body;
+
+    // If a file was uploaded via multer-cloudinary, use its URL; otherwise fall back to body
+    const image = req.file ? req.file.path : req.body.image;
 
     try {
         const newProduct = new Product({
@@ -72,7 +75,12 @@ exports.updateProduct = async (req, res) => {
         let product = await Product.findById(req.params.id);
         if (!product) return res.status(404).json({ msg: 'Product not found' });
 
-        // Update fields if they exist in body
+        // If a new file was uploaded via multer-cloudinary, update the image URL
+        if (req.file) {
+            product.image = req.file.path;
+        }
+
+        // Update remaining fields if they exist in body
         const fields = [
             'name', 'brand', 'price', 'stock', 'description',
             'image', 'images', 'category', 'notes',

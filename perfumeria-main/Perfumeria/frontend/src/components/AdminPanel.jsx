@@ -24,7 +24,7 @@ const AdminPanel = () => {
         concentration: '',
         olfactoryFamily: '',
         notes: {
-            top: [],
+            head: [],
             heart: [],
             base: []
         }
@@ -139,7 +139,7 @@ const AdminPanel = () => {
                 concentration: '',
                 olfactoryFamily: '',
                 notes: {
-                    top: [],
+                    head: [],
                     heart: [],
                     base: []
                 }
@@ -187,7 +187,7 @@ const AdminPanel = () => {
             concentration: product.concentration || '',
             olfactoryFamily: product.olfactoryFamily || '',
             notes: {
-                top: product.notes?.top || [],
+                head: product.notes?.head || [],
                 heart: product.notes?.heart || [],
                 base: product.notes?.base || []
             }
@@ -609,7 +609,8 @@ const AdminPanel = () => {
                                         <option value="Extrait de Parfum">Extrait de Parfum</option>
                                         <option value="Eau de Parfum">Eau de Parfum (EDP)</option>
                                         <option value="Eau de Toilette">Eau de Toilette (EDT)</option>
-                                        <option value="Eau de Cologne">Eau de Cologne (EDC)</option>
+                                        <option value="Aceite Perfumado">Aceite Perfumado</option>
+                                        <option value="Desodorante">Desodorante</option>
                                     </select>
                                 </div>
 
@@ -655,7 +656,7 @@ const AdminPanel = () => {
                                                             ...formData,
                                                             notes: {
                                                                 ...formData.notes,
-                                                                top: [...formData.notes.top, newTopNote.trim()]
+                                                                head: [...formData.notes.head, newTopNote.trim()]
                                                             }
                                                         });
                                                         setNewTopNote('');
@@ -671,7 +672,7 @@ const AdminPanel = () => {
                                                         ...formData,
                                                         notes: {
                                                             ...formData.notes,
-                                                            top: [...formData.notes.top, newTopNote.trim()]
+                                                            head: [...formData.notes.head, newTopNote.trim()]
                                                         }
                                                     });
                                                     setNewTopNote('');
@@ -682,9 +683,9 @@ const AdminPanel = () => {
                                             <Plus className="w-4 h-4" />
                                         </button>
                                     </div>
-                                    {formData.notes?.top?.length > 0 && (
+                                    {formData.notes?.head?.length > 0 && (
                                         <div className="flex flex-wrap gap-2">
-                                            {formData.notes.top?.map((note, index) => (
+                                            {formData.notes.head?.map((note, index) => (
                                                 <span
                                                     key={index}
                                                     className="bg-white/5 border border-white/10 px-3 py-1 text-xs text-white flex items-center gap-2 group hover:border-[#c2a35d]/30"
@@ -697,7 +698,7 @@ const AdminPanel = () => {
                                                                 ...formData,
                                                                 notes: {
                                                                     ...formData.notes,
-                                                                    top: formData.notes.top.filter((_, i) => i !== index)
+                                                                    head: formData.notes.head.filter((_, i) => i !== index)
                                                                 }
                                                             });
                                                         }}

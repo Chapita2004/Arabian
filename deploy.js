@@ -3,8 +3,10 @@ const { Client } = require('ssh2');
 const conn = new Client();
 
 const PROJECT_PATH = '/root/perfumeria/perfumeria-main/Perfumeria/frontend';
+const BACKEND_PATH = '/root/perfumeria/perfumeria-main/Perfumeria/backend';
 
 const commands = [
+    `cd ${BACKEND_PATH} && git pull origin main && npm install --legacy-peer-deps`,
     `cd ${PROJECT_PATH} && npm install --legacy-peer-deps && npm run build`,
     `pm2 restart all`,
 ];

@@ -92,9 +92,9 @@ exports.createPreference = async (req, res) => {
                 items: mpItems,
                 payer: mpPayer,
                 back_urls: {
-                    success: "http://localhost:5173/success",
-                    failure: "http://localhost:5173/failure",
-                    pending: "http://localhost:5173/pending"
+                    success: `${frontendUrl}/success`,
+                    failure: `${frontendUrl}/failure`,
+                    pending: `${frontendUrl}/pending`
                 },
                 external_reference: JSON.stringify(orderData),
                 statement_descriptor: "Perfumeria Arabian"
